@@ -1,26 +1,355 @@
-@import "tailwindcss";
+/* global.css */
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Times New Roman', serif;
+    font-size: 12pt;
+    line-height: 1.5;
+    color: #000;
+    background-color: #f5f5f5;
+}
+
+/* App Container */
+.app-container {
+    max-width: 8.5in;
+    margin: 1in auto;
+    padding: 0.5in;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+.app-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.app-header h1 {
+    font-size: 24pt;
+    font-weight: bold;
+    color: #003366;
+}
+
+.app-header p {
+    font-size: 12pt;
+    color: #666;
+}
+
+/* Upload Section */
+.upload-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ccc;
+}
+
+.upload-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.file-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.button-process, .button-download, .button-test {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.button-process {
+    background-color: #4CAF50;
+}
+
+.button-process:hover:not(.button-disabled) {
+    background-color: #45a049;
+}
+
+.button-download {
+    background-color: #2196F3;
+}
+
+.button-download:hover:not(.button-disabled) {
+    background-color: #0b7dda;
+}
+
+.button-test {
+    background-color: #FFC107;
+}
+
+.button-test:hover {
+    background-color: #e0a800;
+}
+
+.button-disabled {
+    background-color: #ccc !important;
+    cursor: not-allowed;
+}
+
+/* Messages */
+.error-message {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.success-message {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    width: 100%;
+}
+
+/* Preview Container */
+.preview-container {
+    margin-top: 20px;
+}
+
+.preview-title {
+    font-size: 18pt;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* CV Container */
+.cv-container {
+    font-family: 'Times New Roman', serif;
+    font-size: 12pt;
+    line-height: 1.5;
+    background-color: #fff;
+    padding: 0.5in;
+    border: 1px solid #ccc;
+}
+
+.cv-page {
+    min-height: 11in;
+}
+
+/* Sections */
+.section-margin-bottom {
+    margin-bottom: 15pt;
+}
+
+/* Header Blue Box */
+.header-blue-box {
+    background-color: #4472C4;
+    color: #fff;
+    padding: 10pt;
+    text-align: left;
+}
+
+.header-form-text {
+    font-size: 12pt;
+    font-weight: bold;
+}
+
+.header-cv-title {
+    font-size: 14pt;
+    font-weight: bold;
+}
+
+/* Personal Info Section */
+.personal-info-section {
+    background-color: #E7E6E6;
+    padding: 10pt;
+}
+
+.personal-info-row {
+    display: flex;
+    margin-bottom: 5pt;
+}
+
+.personal-info-label {
+    font-weight: bold;
+    width: 40%;
+}
+
+.personal-info-value {
+    width: 60%;
+}
+
+/* Section Title */
+.section-title {
+    font-weight: bold;
+    font-size: 12pt;
+    margin-bottom: 5pt;
+}
+
+/* CV Table */
+.cv-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #000;
+}
+
+.table-header-blue {
+    background-color: #4472C4;
+    color: #fff;
+}
+
+.table-header-cell {
+    border: 1px solid #000;
+    padding: 8pt;
+    font-weight: bold;
+    text-align: left;
+}
+
+.table-cell {
+    border: 1px solid #000;
+    padding: 8pt;
+    vertical-align: top;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* Subsection */
+.subsection-title {
+    font-weight: bold;
+    font-size: 11pt;
+    margin-bottom: 5pt;
+}
+
+.subsection-content {
+    margin-bottom: 10pt;
+}
+
+/* List Item */
+.list-item {
+    margin-left: 20pt;
+    list-style-type: disc;
+}
+
+/* Adequacy Table */
+.adequacy-table th, .adequacy-table td {
+    vertical-align: top;
+}
+
+.adequacy-tasks-col {
+    width: 40%;
+}
+
+.adequacy-references-col {
+    width: 60%;
+}
+
+.adequacy-tasks-cell ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.tasks-list {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.task-item {
+    margin-bottom: 5pt;
+}
+
+/* Work Item */
+.work-item {
+    margin-bottom: 10pt;
+}
+
+/* Bold Text */
+.bold-text {
+    font-weight: bold;
+}
+
+.contact-spacing {
+    margin-left: 5pt;
+}
+
+/* Certification */
+.certification-text {
+    text-align: justify;
+    margin-bottom: 20pt;
+}
+
+/* Signature Block */
+.simple-signature-block {
+    margin-bottom: 20pt;
+}
+
+.top-border-line {
+    border-top: 1px solid #000;
+    margin-bottom: 5pt;
+}
+
+.signature-headers {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5pt;
+}
+
+.header-text {
+    flex: 1;
+    text-align: center;
+}
+
+.header-separator {
+    margin: 0 5pt;
+}
+
+.underline-lines {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+
+.signature-gap {
+    height: 20pt;
+}
+
+.consultant-headers .long-header {
+    flex: 2;
+}
+
+.long-underline {
+    flex: 2;
+}
+
+/* Footer */
+.cv-footer {
+    border-top: 1px solid #000;
+    padding-top: 10pt;
+    display: flex;
+    justify-content: space-between;
+    font-size: 10pt;
+    color: #666;
+}
+
+.app-footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 10pt;
+    color: #666;
 }
