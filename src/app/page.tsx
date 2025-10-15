@@ -237,7 +237,13 @@ const CVDisplay: React.FC<{ data: CVData }> = React.memo(({ data }) => (
                     Publications:
                 </h4>
                 <div className="subsection-content">
-                    {data.publications || '-'}
+                    {data.publications ? (
+                        data.publications.split('\n').map((pub, idx) => (
+                            <div key={idx} className="list-item">• {pub}</div>
+                        ))
+                    ) : (
+                        '-'
+                    )}
                 </div>
               </div>
 
@@ -349,8 +355,8 @@ const CVDisplay: React.FC<{ data: CVData }> = React.memo(({ data }) => (
             {/* Expert's Contact Information */}
             <div className="section-margin-bottom">
                 <span className="bold-text">Expert's contact information:</span>
-                <span className="contact-spacing">e-mail: {data.email}</span>
-                <span className="contact-spacing">phone: {data.phone}</span>
+                <span className="contact-spacing"><strong>e-mail: </strong>{data.email}</span>
+                <span className="contact-spacing"><strong>phone: </strong>{data.phone}</span>
             </div>
 
             {/* Certification */}
@@ -669,7 +675,10 @@ const generateDocx = async (cvData: CVData) => {
                 new Paragraph({
                     children: [new TextRun({ text: "Publications:", bold: true, size: 24 })],
                 }),
-                new Paragraph(cvData.publications || "-"),
+                ...(cvData.publications
+                    ? cvData.publications.split('\n').map(pub => new Paragraph({ children: [new TextRun(`• ${pub}`)] }))
+                    : [new Paragraph("-")]
+                ),
 
                 // Spacing
                 new Paragraph({ text: "" }),
@@ -840,8 +849,8 @@ const generateDocx = async (cvData: CVData) => {
                 new Paragraph({
                     children: [
                         new TextRun({ text: "Expert's contact information: ", bold: true }),
-                        new TextRun(`e-mail: ${cvData.email}`),
-                        new TextRun(` phone: ${cvData.phone}`),
+                        new TextRun({ text: `e-mail: ${cvData.email}`, bold: true }),
+                        new TextRun({ text: `   phone: ${cvData.phone}`, bold: true }),
                     ],
                 }),
 
