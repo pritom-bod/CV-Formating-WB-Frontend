@@ -1013,9 +1013,13 @@ const AutomateCVFormatter: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [previewMode, setPreviewMode] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
 
     useEffect(() => {
         setCvData(initialCVData);
+        const handleScroll = () => setIsScrolled(window.scrollY > 300);
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
     const handleFileChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -1160,6 +1164,10 @@ const AutomateCVFormatter: React.FC = () => {
     const isProcessingDisabled = useMemo(() => !file || loading, [file, loading]);
     const isDownloadDisabled = useMemo(() => loading || !cvData, [loading, cvData]);
 
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
     return (
         <div className="app-container">
             <header className="app-header">
@@ -1172,96 +1180,108 @@ const AutomateCVFormatter: React.FC = () => {
             </header>
             
             <div className="upload-section">
-                <div className="upload-controls">
-                    <input
-                        type="file"
-                        accept=".docx"
-                        onChange={handleFileChange}
-                        className="file-input"
-                    />
-                    <button
-                        onClick={handleProcessCV}
-                        disabled={isProcessingDisabled}
-                        className={isProcessingDisabled ? "button-disabled" : "button-process"}
-                    >
-                        {loading ? 'Processing...' : '1. Extract Data (AI)'}
-                    </button>
-                    <button
-                        onClick={handleDownloadDocx}
-                        disabled={isDownloadDisabled}
-                        className={isDownloadDisabled ? "button-disabled" : "button-download"}
-                    >
-                        {loading ? 'Downloading...' : '2. Download DOCX'}
-                    </button>
-                    <button
-                        onClick={async () => {
-                            setError(null);
-                            setSuccessMessage(null);
-                            
-                            try {
-                                console.log('Testing backend connection...');
+                <div className="upload-card">
+                    <div className="upload-header">
+                        <h2>Upload Your CV</h2>
+                        <p className="upload-subtitle">Transform your CV into the World Bank FORM TECH-6 format.</p>
+                        <button
+                            onClick={async () => {
+                                setError(null);
+                                setSuccessMessage(null);
                                 
-                                // Test 1: Basic connectivity
-                                const basicTest = await fetch('http://localhost:8000/', {
-                                    method: 'GET',
-                                    mode: 'cors',
-                                });
-                                console.log('Basic connectivity test:', basicTest.status);
-                                
-                                // Test 2: API endpoint OPTIONS
-                                const optionsTest = await fetch('http://localhost:8000/api/process-cv/', {
-                                    method: 'OPTIONS',
-                                    mode: 'cors',
-                                    headers: { 
-                                        'Content-Type': 'application/json',
-                                        'Accept': 'application/json'
+                                try {
+                                    console.log('Testing backend connection...');
+                                    
+                                    // Test 1: Basic connectivity
+                                    const basicTest = await fetch('http://localhost:8000/', {
+                                        method: 'GET',
+                                        mode: 'cors',
+                                    });
+                                    console.log('Basic connectivity test:', basicTest.status);
+                                    
+                                    // Test 2: API endpoint OPTIONS
+                                    const optionsTest = await fetch('http://localhost:8000/api/process-cv/', {
+                                        method: 'OPTIONS',
+                                        mode: 'cors',
+                                        headers: { 
+                                            'Content-Type': 'application/json',
+                                            'Accept': 'application/json'
+                                        }
+                                    });
+                                    console.log('OPTIONS test:', optionsTest.status);
+                                    
+                                    // Test 3: Check CORS headers
+                                    const corsHeaders = {
+                                        'Access-Control-Allow-Origin': optionsTest.headers.get('Access-Control-Allow-Origin'),
+                                        'Access-Control-Allow-Methods': optionsTest.headers.get('Access-Control-Allow-Methods'),
+                                        'Access-Control-Allow-Headers': optionsTest.headers.get('Access-Control-Allow-Headers'),
+                                    };
+                                    console.log('CORS headers:', corsHeaders);
+                                    
+                                    setSuccessMessage(`✅ Backend is accessible! Status: ${basicTest.status}, OPTIONS: ${optionsTest.status}. CORS configured: ${corsHeaders['Access-Control-Allow-Origin'] ? 'Yes' : 'No'}`);
+                                    
+                                } catch (err) {
+                                    console.error('Connection test failed:', err);
+                                    let errorMsg = 'Connection test failed: ';
+                                    
+                                    if (err instanceof TypeError && err.message.includes('Failed to fetch')) {
+                                        errorMsg += 'Backend server is not running or not accessible. Please start your Django backend on http://localhost:8000';
+                                    } else {
+                                        errorMsg += err;
                                     }
-                                });
-                                console.log('OPTIONS test:', optionsTest.status);
-                                
-                                // Test 3: Check CORS headers
-                                const corsHeaders = {
-                                    'Access-Control-Allow-Origin': optionsTest.headers.get('Access-Control-Allow-Origin'),
-                                    'Access-Control-Allow-Methods': optionsTest.headers.get('Access-Control-Allow-Methods'),
-                                    'Access-Control-Allow-Headers': optionsTest.headers.get('Access-Control-Allow-Headers'),
-                                };
-                                console.log('CORS headers:', corsHeaders);
-                                
-                                setSuccessMessage(`✅ Backend is accessible! Status: ${basicTest.status}, OPTIONS: ${optionsTest.status}. CORS configured: ${corsHeaders['Access-Control-Allow-Origin'] ? 'Yes' : 'No'}`);
-                                
-                            } catch (err) {
-                                console.error('Connection test failed:', err);
-                                let errorMsg = 'Connection test failed: ';
-                                
-                                if (err instanceof TypeError && err.message.includes('Failed to fetch')) {
-                                    errorMsg += 'Backend server is not running or not accessible. Please start your Django backend on http://localhost:8000';
-                                } else {
-                                    errorMsg += err;
+                                    
+                                    setError(errorMsg);
                                 }
-                                
-                                setError(errorMsg);
-                            }
-                        }}
-                        className="button-test"
-                    >
-                        Test Connection
-                    </button>
+                            }}
+                            className="button-test-connection"
+                        >
+                            Test Connection
+                        </button>
+                    </div>
+                    <div className="upload-controls">
+                        <div className="file-input-wrapper">
+                            <input
+                                type="file"
+                                accept=".docx"
+                                onChange={handleFileChange}
+                                className="file-input"
+                                id="cv-upload"
+                            />
+                            <label htmlFor="cv-upload" className="file-input-label">
+                                {file ? file.name : 'Choose or Drop Your DOCX File'}
+                            </label>
+                        </div>
+                        <div className="button-group">
+                            <button
+                                onClick={handleProcessCV}
+                                disabled={isProcessingDisabled}
+                                className={isProcessingDisabled ? "button-disabled" : "button-process"}
+                            >
+                                {loading ? 'Processing...' : 'Extract Data (AI)'}
+                            </button>
+                            <button
+                                onClick={handleDownloadDocx}
+                                disabled={isDownloadDisabled}
+                                className={isDownloadDisabled ? "button-disabled" : "button-download"}
+                            >
+                                {loading ? 'Downloading...' : 'Download DOCX'}
+                            </button>
+                        </div>
+                    </div>
+                    {error && (
+                        <div className="error-message">
+                            <strong>Error! </strong>
+                            {error}
+                        </div>
+                    )}
+                    {successMessage && (
+                        <div className="success-message">
+                            <strong>Success! </strong>
+                            {successMessage}
+                        </div>
+                    )}
                 </div>
-                
-                {error && (
-                    <div className="error-message">
-                        <strong>Error! </strong>
-                        {error}
-                    </div>
-                )}
-                
-                {successMessage && (
-                    <div className="success-message">
-                        <strong>Success! </strong>
-                        {successMessage}
-                    </div>
-                )}
-      </div>
+            </div>
 
             {previewMode && cvData && (
                 <div className="preview-container">
@@ -1269,14 +1289,19 @@ const AutomateCVFormatter: React.FC = () => {
                         Formatted CV Preview (Exact World Bank FORM TECH-6 Design)
                     </h2>
                     <CVDisplay data={cvData} />
-      </div>
+                    {isScrolled && (
+                        <button onClick={scrollToTop} className="scroll-to-top">
+                            ↑
+                        </button>
+                    )}
+                </div>
             )}
             
             <footer className="app-footer">
                 <p>Note: DOCX generation uses the exact FORM TECH-6 template design with proper blue headers and layout.</p>
             </footer>
-    </div>
-  );
+        </div>
+    );
 };
 
 export default AutomateCVFormatter;
