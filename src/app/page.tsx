@@ -56,6 +56,7 @@ interface CVData {
     membership_in_professional_associations: string;
     publications: string;
     other_training: string;
+
     countries_experience: string;
     languages: Language[];
     employment_record: Employment[];
@@ -139,19 +140,21 @@ const CVDisplay: React.FC<{ data: CVData }> = React.memo(({ data }) => (
                                 Educational Institutions
                             </th>
                             <th className="table-header-cell">
-                                Dates Attended
-                            </th>
-                            <th className="table-header-cell">
                                 Degree (s)/ Diploma (s) Obtained
                             </th>
+                            <th className="table-header-cell">
+                                Dates Attended
+                            </th>
+                            
               </tr>
             </thead>
             <tbody>
                         {data.education.map((edu, idx) => (
                 <tr key={idx}>
                                 <td className="table-cell">{edu.school_university}</td>
-                                <td className="table-cell">{edu.date_obtained}</td>
                                 <td className="table-cell">{edu.degree}</td>
+                                <td className="table-cell">{edu.date_obtained}</td>
+                                
                 </tr>
               ))}
                         {data.education.length === 0 && (
@@ -159,6 +162,7 @@ const CVDisplay: React.FC<{ data: CVData }> = React.memo(({ data }) => (
                                 <td className="table-cell"></td>
                                 <td className="table-cell"></td>
                                 <td className="table-cell"></td>
+                                
                             </tr>
                         )}
             </tbody>
@@ -453,7 +457,7 @@ const generateDocx = async (cvData: CVData) => {
                         new TableRow({
                             children: [
                                 new TableCell({
-                                    shading: { fill: "4472C4" },
+                                    shading: { fill: "#5B9BD5" },
                                     children: [
                                         new Paragraph({
                                             alignment: AlignmentType.LEFT,
@@ -485,7 +489,7 @@ const generateDocx = async (cvData: CVData) => {
                         new TableRow({
                             children: [
                                 new TableCell({
-                                    shading: { fill: "E7E6E6" },
+                                    shading: { fill: "#DEEAF6" },
                                     children: [
                                         new Paragraph({
                                             children: [
@@ -500,7 +504,7 @@ const generateDocx = async (cvData: CVData) => {
                         new TableRow({
                             children: [
                                 new TableCell({
-                                    shading: { fill: "E7E6E6" },
+                                    shading: { fill: "#DEEAF6" },
                                     children: [
                                         new Paragraph({
                                             children: [
@@ -515,7 +519,7 @@ const generateDocx = async (cvData: CVData) => {
                         new TableRow({
                             children: [
                                 new TableCell({
-                                    shading: { fill: "E7E6E6" },
+                                    shading: { fill: "#DEEAF6" },
                                     children: [
                                         new Paragraph({
                                             children: [
@@ -530,7 +534,7 @@ const generateDocx = async (cvData: CVData) => {
                         new TableRow({
                             children: [
                                 new TableCell({
-                                    shading: { fill: "E7E6E6" },
+                                    shading: { fill: "#DEEAF6" },
                                     children: [
                                         new Paragraph({
                                             children: [
@@ -559,17 +563,18 @@ const generateDocx = async (cvData: CVData) => {
                         new TableRow({
                             children: [
                                 new TableCell({ 
-                                    shading: { fill: "4472C4" },
-                                    children: [new Paragraph({ children: [new TextRun({ text: "Educational Institutions", color: "FFFFFF", bold: true })] })],
+                                    shading: { fill: "#DEEAF6" },
+                                    children: [new Paragraph({ children: [new TextRun({ text: "Educational Institutions", color: "#000000", bold: true })] })],
                                 }),
                                 new TableCell({ 
-                                    shading: { fill: "4472C4" },
-                                    children: [new Paragraph({ children: [new TextRun({ text: "Dates Attended", color: "FFFFFF", bold: true })] })],
+                                    shading: { fill: "#DEEAF6" },
+                                    children: [new Paragraph({ children: [new TextRun({ text: "Degree (s)/ Diploma (s) Obtained", color: "#000000", bold: true })] })],
                                 }),
                                 new TableCell({ 
-                                    shading: { fill: "4472C4" },
-                                    children: [new Paragraph({ children: [new TextRun({ text: "Degree (s)/ Diploma (s) Obtained", color: "FFFFFF", bold: true })] })],
+                                    shading: { fill: "#DEEAF6" },
+                                    children: [new Paragraph({ children: [new TextRun({ text: "Dates Attended", color: "#000000", bold: true })] })],
                                 }),
+                                
                             ],
                         }),
                         ...(cvData.education.length > 0
@@ -577,8 +582,9 @@ const generateDocx = async (cvData: CVData) => {
                                 new TableRow({
                                     children: [
                                         new TableCell({ children: [new Paragraph(edu.school_university)] }),
-                                        new TableCell({ children: [new Paragraph(edu.date_obtained)] }),
                                         new TableCell({ children: [new Paragraph(edu.degree)] }),
+                                        new TableCell({ children: [new Paragraph(edu.date_obtained)] }),
+                                        
                                     ],
                                 })
                             )
@@ -588,6 +594,7 @@ const generateDocx = async (cvData: CVData) => {
                                         new TableCell({ children: [new Paragraph("")] }),
                                         new TableCell({ children: [new Paragraph("")] }),
                                         new TableCell({ children: [new Paragraph("")] }),
+                                        
                                     ],
                                 }),
                             ]
@@ -609,20 +616,20 @@ const generateDocx = async (cvData: CVData) => {
                         new TableRow({
                             children: [
                                 new TableCell({ 
-                                    shading: { fill: "4472C4" },
-                                    children: [new Paragraph({ children: [new TextRun({ text: "Period", color: "FFFFFF", bold: true })] })],
+                                    shading: { fill: "#DEEAF6" },
+                                    children: [new Paragraph({ children: [new TextRun({ text: "Period", color: "#000000", bold: true })] })],
                                 }),
                                 new TableCell({ 
-                                    shading: { fill: "4472C4" },
-                                    children: [new Paragraph({ children: [new TextRun({ text: "Employing Organization and your title/position. Contact Information for references", color: "FFFFFF", bold: true })] })],
+                                    shading: { fill: "#DEEAF6" },
+                                    children: [new Paragraph({ children: [new TextRun({ text: "Employing Organization and your title/position. Contact Information for references", color: "#000000", bold: true })] })],
                                 }),
                                 new TableCell({ 
-                                    shading: { fill: "4472C4" },
-                                    children: [new Paragraph({ children: [new TextRun({ text: "Country", color: "FFFFFF", bold: true })] })],
+                                    shading: { fill: "#DEEAF6" },
+                                    children: [new Paragraph({ children: [new TextRun({ text: "Country", color: "#000000", bold: true })] })],
                                 }),
                                 new TableCell({ 
-                                    shading: { fill: "4472C4" },
-                                    children: [new Paragraph({ children: [new TextRun({ text: "Summary of activities performed relevant to the Assignment", color: "FFFFFF", bold: true })] })],
+                                    shading: { fill: "#DEEAF6" },
+                                    children: [new Paragraph({ children: [new TextRun({ text: "Summary of activities performed relevant to the Assignment", color: "#000000", bold: true })] })],
                                 }),
                             ],
                         }),
@@ -671,7 +678,11 @@ const generateDocx = async (cvData: CVData) => {
                 new Paragraph({
                     children: [new TextRun({ text: "Membership in Professional Associations:", bold: true, size: 24 })],
                 }),
-                new Paragraph(cvData.membership_in_professional_associations || "-"),
+                ...(cvData.membership_in_professional_associations
+                    ? cvData.membership_in_professional_associations.split('\n').map(mipa => new Paragraph({ children: [new TextRun(`• ${mipa}`)] }))
+                    : [new Paragraph("-")]
+                ),
+
                 new Paragraph({
                     children: [new TextRun({ text: "Publications:", bold: true, size: 24 })],
                 }),
@@ -679,6 +690,7 @@ const generateDocx = async (cvData: CVData) => {
                     ? cvData.publications.split('\n').map(pub => new Paragraph({ children: [new TextRun(`• ${pub}`)] }))
                     : [new Paragraph("-")]
                 ),
+                
 
                 // Spacing
                 new Paragraph({ text: "" }),
@@ -694,20 +706,20 @@ const generateDocx = async (cvData: CVData) => {
                         new TableRow({
                             children: [
                                 new TableCell({ 
-                                    shading: { fill: "4472C4" },
-                                    children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: "Languages", color: "FFFFFF", bold: true })] })],
+                                    shading: { fill: "#DEEAF6" },
+                                    children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: "Languages", color: "#000000", bold: true })] })],
                                 }),
                                 new TableCell({ 
-                                    shading: { fill: "4472C4" },
-                                    children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: "Speaking", color: "FFFFFF", bold: true })] })],
+                                    shading: { fill: "#DEEAF6" },
+                                    children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: "Speaking", color: "#000000", bold: true })] })],
                                 }),
                                 new TableCell({ 
-                                    shading: { fill: "4472C4" },
-                                    children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: "Reading", color: "FFFFFF", bold: true })] })],
+                                    shading: { fill: "#DEEAF6" },
+                                    children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: "Reading", color: "#000000", bold: true })] })],
                                 }),
                                 new TableCell({ 
-                                    shading: { fill: "4472C4" },
-                                    children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: "Writing", color: "FFFFFF", bold: true })] })],
+                                    shading: { fill: "#DEEAF6" },
+                                    children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: "Writing", color: "#000000", bold: true })] })],
                                 }),
                             ],
                         }),
@@ -765,12 +777,12 @@ const generateDocx = async (cvData: CVData) => {
                         new TableRow({
                             children: [
                                 new TableCell({ 
-                                    shading: { fill: "4472C4" },
-                                    children: [new Paragraph({ children: [new TextRun({ text: "Detailed Assigned Tasks on Consultant's Team of Experts", color: "FFFFFF", bold: true })] })],
+                                    shading: { fill: "#DEEAF6" },
+                                    children: [new Paragraph({ children: [new TextRun({ text: "Detailed Assigned Tasks on Consultant's Team of Experts", color: "#000000", bold: true })] })],
                                 }),
                                 new TableCell({ 
-                                    shading: { fill: "4472C4" },
-                                    children: [new Paragraph({ children: [new TextRun({ text: "Reference to Prior Work / Assignments that Best Illustrates Capability to Handle the Assigned Tasks", color: "FFFFFF", bold: true })] })],
+                                    shading: { fill: "#DEEAF6" },
+                                    children: [new Paragraph({ children: [new TextRun({ text: "Reference to Prior Work / Assignments that Best Illustrates Capability to Handle the Assigned Tasks", color: "#000000", bold: true })] })],
                                 }),
                             ],
                         }),
@@ -794,7 +806,7 @@ const generateDocx = async (cvData: CVData) => {
                                             new Paragraph({
                                                 children: [
                                                     new TextRun({ text: "Name of assignment or project: ", bold: true }),
-                                                    new TextRun(work.name),
+                                                    new TextRun({ text: work.name, color: "#5861e9", bold: true}),
                                                 ],
                                             }),
                                             new Paragraph({
@@ -824,7 +836,7 @@ const generateDocx = async (cvData: CVData) => {
                                             new Paragraph({
                                                 children: [
                                                     new TextRun({ text: "Position held: ", bold: true }),
-                                                    new TextRun(work.position_held),
+                                                    new TextRun({ text: work.position_held, color: "#5861e9", bold: true}),
                                                 ],
                                             }),
                                             new Paragraph({
@@ -882,17 +894,17 @@ const generateDocx = async (cvData: CVData) => {
                         new TableRow({
                             children: [
                                 new TableCell({
-                                    borders: { bottom: { style: BorderStyle.SINGLE, size: 4, color: "000000" } },
+                                    borders: { bottom: { style: BorderStyle.SINGLE, size: 4, color: "#000000" } },
                                     width: { size: 33, type: WidthType.PERCENTAGE },
                                     children: [new Paragraph("")],
                                 }),
                                 new TableCell({
-                                    borders: { bottom: { style: BorderStyle.SINGLE, size: 4, color: "000000" } },
+                                    borders: { bottom: { style: BorderStyle.SINGLE, size: 4, color: "#000000" } },
                                     width: { size: 33, type: WidthType.PERCENTAGE },
                                     children: [new Paragraph("")],
                                 }),
                                 new TableCell({
-                                    borders: { bottom: { style: BorderStyle.SINGLE, size: 4, color: "000000" } },
+                                    borders: { bottom: { style: BorderStyle.SINGLE, size: 4, color: "#000000" } },
                                     width: { size: 33, type: WidthType.PERCENTAGE },
                                     children: [new Paragraph("")],
                                 }),
@@ -949,17 +961,17 @@ const generateDocx = async (cvData: CVData) => {
                         new TableRow({
                             children: [
                                 new TableCell({
-                                    borders: { bottom: { style: BorderStyle.SINGLE, size: 4, color: "000000" } },
+                                    borders: { bottom: { style: BorderStyle.SINGLE, size: 4, color: "#000000" } },
                                     width: { size: 50, type: WidthType.PERCENTAGE },
                                     children: [new Paragraph("")],
                                 }),
                                 new TableCell({
-                                    borders: { bottom: { style: BorderStyle.SINGLE, size: 4, color: "000000" } },
+                                    borders: { bottom: { style: BorderStyle.SINGLE, size: 4, color: "#000000" } },
                                     width: { size: 25, type: WidthType.PERCENTAGE },
                                     children: [new Paragraph("")],
                                 }),
                                 new TableCell({
-                                    borders: { bottom: { style: BorderStyle.SINGLE, size: 4, color: "000000" } },
+                                    borders: { bottom: { style: BorderStyle.SINGLE, size: 4, color: "#000000" } },
                                     width: { size: 25, type: WidthType.PERCENTAGE },
                                     children: [new Paragraph("")],
                                 }),
@@ -1309,8 +1321,38 @@ const AutomateCVFormatter: React.FC = () => {
             <footer className="app-footer">
                 <p>Note: DOCX generation uses the exact FORM TECH-6 template design with proper blue headers and layout.</p>
             </footer>
+
+            {/* Global Loading Overlay */}
+            {loading && <LoadingOverlay />}
         </div>
     );
 };
+
+// Updated Loading Overlay with Header, Funny Explosion, and Activities
+const LoadingOverlay: React.FC = () => (
+    <div className="loading-overlay">
+        <div className="loading-content">
+            <h2 className="loading-header">🤖 AI at Work!</h2>
+            <div className="cute-ai-container">
+                <div className="cute-ai-spinner">
+                    <div className="ai-head">
+                        <div className="explosion-particles"></div> {/* Funny explosion effect */}
+                    </div>
+                    <div className="ai-eyes">
+                        <div className="eye left"></div>
+                        <div className="eye right"></div>
+                    </div>
+                    <div className="ai-mouth"></div>
+                    <div className="ai-activities"> {/* Funny activities */}
+                        <div className="activity gear">⚙️</div>
+                        <div className="activity bolt">⚡</div>
+                        <div className="activity star">⭐</div>
+                    </div>
+                </div>
+            </div>
+            <p className="loading-text">Formatting Your CV with Magic<span className="dots">...</span></p>
+        </div>
+    </div>
+);
 
 export default AutomateCVFormatter;

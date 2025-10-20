@@ -14,7 +14,10 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "CV Formatting Tool",
-  description: "A tool for formatting CVs",
+  description: "CV formatting tool for World Bank CD formatting",
+  icons: {
+    icon: "mslDB.png",
+  },
 };
 
 export default function RootLayout({
