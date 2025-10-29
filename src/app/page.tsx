@@ -1,11 +1,10 @@
-// page.tsx
+// page.tsx (full file)
 
 'use client';
 
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { Document as DocxDocument, Packer, Paragraph, Table, TableRow, TableCell, TextRun, WidthType, AlignmentType, BorderStyle, VerticalAlign } from 'docx';
 import { saveAs } from 'file-saver';
-import { Bold } from 'lucide-react';
 
 interface Education {
     school_university: string;
@@ -1035,20 +1034,72 @@ const AutomateCVFormatter: React.FC = () => {
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [previewMode, setPreviewMode] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
+    const [isDragging, setIsDragging] = useState(false);
+    const dropRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         setCvData(initialCVData);
         const handleScroll = () => setIsScrolled(window.scrollY > 300);
         window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+
+        const div = dropRef.current;
+        if (div) {
+            div.addEventListener('dragover', handleDragOver);
+            div.addEventListener('dragleave', handleDragLeave);
+            div.addEventListener('drop', handleDrop);
+        }
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            if (div) {
+                div.removeEventListener('dragover', handleDragOver);
+                div.removeEventListener('dragleave', handleDragLeave);
+                div.removeEventListener('drop', handleDrop);
+            }
+        };
     }, []);
+
+    const handleDragOver = (e: DragEvent) => {
+        e.preventDefault();
+        setIsDragging(true);
+    };
+
+    const handleDragLeave = (e: DragEvent) => {
+        e.preventDefault();
+        setIsDragging(false);
+    };
+
+    const handleDrop = (e: DragEvent) => {
+        e.preventDefault();
+        setIsDragging(false);
+        if (e.dataTransfer?.files) {
+            const droppedFile = e.dataTransfer.files[0];
+            if (validateFileType(droppedFile)) {
+                setFile(droppedFile);
+                setError(null);
+                setSuccessMessage(null);
+                setCvData(null);
+            } else {
+                setError('Please upload only .doc, .docx, .pdf, or .txt files.');
+            }
+        }
+    };
+
+    const validateFileType = (file: File) => {
+        const ext = file.name.toLowerCase().split('.').pop();
+        return ['doc', 'docx', 'pdf', 'txt'].includes(ext || '');
+    };
 
     const handleFileChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = event.target.files?.[0] || null;
-        setFile(selectedFile);
-        setError(null);
-        setSuccessMessage(null);
-        setCvData(null);
+        if (selectedFile && validateFileType(selectedFile)) {
+            setFile(selectedFile);
+            setError(null);
+            setSuccessMessage(null);
+            setCvData(null);
+        } else {
+            setError('Please upload only .doc, .docx, .pdf, or .txt files.');
+        }
     }, []);
 
     const fileToBase64 = (file: File): Promise<string> => {
@@ -1064,12 +1115,7 @@ const AutomateCVFormatter: React.FC = () => {
 
     const handleProcessCV = useCallback(async () => {
         if (!file) {
-            setError("Please select a DOCX file.");
-            return;
-        }
-
-        if (file.type !== 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-            setError("Please upload DOCX files only.");
+            setError("Please select a file.");
             return;
         }
 
@@ -1196,15 +1242,18 @@ const AutomateCVFormatter: React.FC = () => {
                     World Bank CV Format Automation
                 </h1>
                 <p className="app-description">
-                    Upload your DOCX CV and get it formatted in the exact World Bank FORM TECH-6 template design.
+                    Upload your CV (.doc, .docx, .pdf, .txt) and get it formatted in the exact World Bank FORM TECH-6 template design.
                 </p>
             </header>
             
             <div className="upload-section">
-                <div className="upload-card">
+                <div 
+                    className={`upload-card ${isDragging ? 'drag-active' : ''}`} 
+                    ref={dropRef}
+                >
                     <div className="upload-header">
                         <h2>Upload Your CV</h2>
-                        <p className="upload-subtitle">Transform your CV into the World Bank FORM TECH-6 format.</p>
+                        <p className="upload-subtitle">Drag & drop or click to select your file (.doc, .docx, .pdf, .txt). Transform it into the World Bank FORM TECH-6 format.</p>
                         <button
                             onClick={async () => {
                                 setError(null);
@@ -1263,13 +1312,13 @@ const AutomateCVFormatter: React.FC = () => {
                         <div className="file-input-wrapper">
                             <input
                                 type="file"
-                                accept=".docx"
+                                accept=".doc,.docx,.pdf,.txt"
                                 onChange={handleFileChange}
                                 className="file-input"
                                 id="cv-upload"
                             />
                             <label htmlFor="cv-upload" className="file-input-label">
-                                {file ? file.name : 'Choose or Drop Your DOCX File'}
+                                {file ? file.name : 'Choose File or Drag & Drop Here'}
                             </label>
                         </div>
                         <div className="button-group">
@@ -1328,31 +1377,73 @@ const AutomateCVFormatter: React.FC = () => {
     );
 };
 
-// Updated Loading Overlay with Header, Funny Explosion, and Activities
+// Updated Loading Overlay with professional design
 const LoadingOverlay: React.FC = () => (
     <div className="loading-overlay">
-        <div className="loading-content">
-            <h2 className="loading-header">🤖 AI at Work!</h2>
-            <div className="cute-ai-container">
-                <div className="cute-ai-spinner">
-                    <div className="ai-head">
-                        <div className="explosion-particles"></div> {/* Funny explosion effect */}
-                    </div>
-                    <div className="ai-eyes">
-                        <div className="eye left"></div>
-                        <div className="eye right"></div>
-                    </div>
-                    <div className="ai-mouth"></div>
-                    <div className="ai-activities"> {/* Funny activities */}
-                        <div className="activity gear">⚙️</div>
-                        <div className="activity bolt">⚡</div>
-                        <div className="activity star">⭐</div>
-                    </div>
+        <div className="loading-card">
+            {/* Logo/Brand Section */}
+            <div className="loading-logo">
+                <div className="logo-circle">
+                    <svg className="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
                 </div>
             </div>
-            <p className="loading-text">Formatting Your CV with Magic<span className="dots">...</span></p>
+
+            {/* Progress Section */}
+            <div className="loading-content">
+                <h2 className="loading-title">Processing Your CV</h2>
+                <p className="loading-subtitle">Please wait while we format your document</p>
+                
+                {/* Progress Bar */}
+                <div className="progress-container">
+                    <div className="progress-bar">
+                        <div className="progress-fill"></div>
+                        <div className="progress-glow"></div>
+                    </div>
+                    <div className="progress-percentage">
+                        <span className="percentage-text">Loading...</span>
+                    </div>
+                </div>
+
+                {/* Status Steps */}
+                <div className="status-steps">
+                    <div className="step active">
+                        <div className="step-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" strokeWidth="2"/>
+                            </svg>
+                        </div>
+                        <span className="step-label">Analyzing</span>
+                    </div>
+                    <div className="step-divider"></div>
+                    <div className="step processing">
+                        <div className="step-icon">
+                            <div className="spinner-small"></div>
+                        </div>
+                        <span className="step-label">Processing</span>
+                    </div>
+                    <div className="step-divider"></div>
+                    <div className="step pending">
+                        <div className="step-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" strokeWidth="2"/>
+                            </svg>
+                        </div>
+                        <span className="step-label">Formatting</span>
+                    </div>
+                </div>
+
+                {/* Subtle Animation Indicator */}
+                <div className="loading-dots">
+                    <span className="dot"></span>
+                    <span className="dot"></span>
+                    <span className="dot"></span>
+                </div>
+            </div>
         </div>
     </div>
 );
+
 
 export default AutomateCVFormatter;
