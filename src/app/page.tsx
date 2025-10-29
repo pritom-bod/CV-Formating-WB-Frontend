@@ -1080,7 +1080,7 @@ const AutomateCVFormatter: React.FC = () => {
                 setSuccessMessage(null);
                 setCvData(null);
             } else {
-                setError('Please upload only .doc, .docx, .pdf, or .txt files.');
+                setError('Please upload only .docx, .pdf, or .txt files.');
             }
         }
     };
@@ -1242,7 +1242,7 @@ const AutomateCVFormatter: React.FC = () => {
                     World Bank CV Format Automation
                 </h1>
                 <p className="app-description">
-                    Upload your CV (.doc, .docx, .pdf, .txt) and get it formatted in the exact World Bank FORM TECH-6 template design.
+                    Upload your CV (.docx, .pdf, .txt) and get it formatted in the exact World Bank FORM TECH-6 template design.
                 </p>
             </header>
             
@@ -1253,8 +1253,8 @@ const AutomateCVFormatter: React.FC = () => {
                 >
                     <div className="upload-header">
                         <h2>Upload Your CV</h2>
-                        <p className="upload-subtitle">Drag & drop or click to select your file (.doc, .docx, .pdf, .txt). Transform it into the World Bank FORM TECH-6 format.</p>
-                        <button
+                        <p className="upload-subtitle">Drag & drop or click to select your file ( .docx, .pdf, .txt). Transform it into the World Bank FORM TECH-6 format.</p>
+                        {/* <button
                             onClick={async () => {
                                 setError(null);
                                 setSuccessMessage(null);
@@ -1306,7 +1306,7 @@ const AutomateCVFormatter: React.FC = () => {
                             className="button-test-connection"
                         >
                             Test Connection
-                        </button>
+                        </button> */}
                     </div>
                     <div className="upload-controls">
                         <div className="file-input-wrapper">
